@@ -1,7 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
 
+const testFetch = () => {
+  fetch('https://warm-crisp-3aa44e.netlify.app/.netlify/functions/temp')
+    .then((res) => (res.json()))
+    .then((json) => (console.log(json)));
+};
+
 function App() {
+  testFetch();
+
   return (
     <div className="App">
       <header className="App-header">
