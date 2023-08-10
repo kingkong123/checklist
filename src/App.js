@@ -1,4 +1,4 @@
-import Index from './pages/ToDo';
+import Index from './pages/TodoIndex';
 
 function App() {
   return (

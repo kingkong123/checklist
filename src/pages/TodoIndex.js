@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Grid } from '@mui/material';
@@ -18,6 +19,7 @@ const filterItems = (rawItems) => {
 };
 
 const Index = () => {
+  const [count, setCount] = useState(0);
   const [addItemValue, setAddItemValue] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [loading, setLoading] = useState(false);
@@ -25,25 +27,42 @@ const Index = () => {
   const [checkedItems, setCheckedItems] = useState(null);
   const [uncheckedItems, setUncheckedItems] = useState(null);
 
-  useEffect(() => {
-    getToDoItemsAsync()
-      .then((res) => {
-        const { checked, unchecked } = filterItems(res);
+  const fetchItems = async () => {
+    if (!loading) {
+      setLoading(true);
 
-        setCheckedItems(checked);
-        setUncheckedItems(unchecked);
-      });
+      const res = await getToDoItemsAsync({ search: searchValue });
+
+      const { checked, unchecked } = filterItems(res);
+
+      setCheckedItems(checked);
+      setUncheckedItems(unchecked);
+
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
   }, []);
 
   useEffect(() => {
-    getToDoItemsAsync({ search: searchValue })
-      .then((res) => {
-        const { checked, unchecked } = filterItems(res);
-
-        setCheckedItems(checked);
-        setUncheckedItems(unchecked);
-      })
+    fetchItems();
   }, [searchValue])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (count !== 0) {
+        console.log(3);
+        fetchItems();
+        console.log('fetching');
+      }
+
+      setCount(count + 1);
+    }, 1000 * 60);
+
+    return () => (clearInterval(interval));
+  }, [count])
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -99,7 +118,7 @@ const Index = () => {
     <Container maxWidth={'xl'}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item xs={12} md={8}>
-          <h1>title</h1>
+          <h1>Simple Todo List</h1>
         </Grid>
         <Grid item xs={12} md={4}>
           <DeleteTasks handleDeleteAllTasks={handleDeleteAllTasks} />

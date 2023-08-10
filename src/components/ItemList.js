@@ -12,7 +12,7 @@ const ItemList = ({ checked = false, items, handleItemClick }) => {
     <>
       <h2>{title}</h2>
       <Stack>
-        {items && items.map((item) => (<TodoItem {...item} handleItemClick={handleItemClick} />))}
+        {items && items.map((item) => (<TodoItem {...item} handleItemClick={handleItemClick} key={item.id} />))}
       </Stack>
     </>
   );
