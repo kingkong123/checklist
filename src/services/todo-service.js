@@ -1,7 +1,14 @@
 const baseUrl = process.env.REACT_APP_API_ENDPOINT;
 
-const getToDoItemsAsync = async () => {
-  const result = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/get-items`);
+const getToDoItemsAsync = async (opt = {}) => {
+  let query = '';
+
+  if (opt.search) {
+    const { search } = opt;
+    query = new URLSearchParams({ search }).toString();
+  }
+
+  const result = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/items${opt?.search ? `?${query}` : ''}`);
   const json = await result.json();
 
   return json.data;
@@ -9,7 +16,7 @@ const getToDoItemsAsync = async () => {
 
 const addToDoItemAsync = async (itemName = '') => {
   if (itemName) {
-    const res = await fetch(`${baseUrl}/add-item`, {
+    const res = await fetch(`${baseUrl}/items`, {
       method: 'POST',
       mode: 'cors',
       eferrerPolicy: 'no-referrer',
@@ -29,7 +36,7 @@ const addToDoItemAsync = async (itemName = '') => {
 
 const updateToDoItemAsync = async (id, checked) => {
   if (id) {
-    const res = await fetch(`${baseUrl}/update-item`, {
+    const res = await fetch(`${baseUrl}/items`, {
       method: 'PUT',
       mode: 'cors',
       eferrerPolicy: 'no-referrer',
@@ -48,7 +55,7 @@ const updateToDoItemAsync = async (id, checked) => {
 };
 
 const deleteToDoItemsAsync = async () => {
-  const res = await fetch(`${baseUrl}/delete-items`, {
+  const res = await fetch(`${baseUrl}/items`, {
     method: 'DELETE',
     mode: 'cors',
     eferrerPolicy: 'no-referrer',

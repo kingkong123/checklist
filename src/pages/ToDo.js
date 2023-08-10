@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { Container, Grid } from '@mui/material';
 
 import AddItemForm from '../components/AddItemForm';
+import SearchForm from '../components/SearchForm';
 import DeleteTasks from '../components/DeleteTasks';
 import ItemList from '../components/ItemList';
+
+
 import { addToDoItemAsync, deleteToDoItemsAsync, getToDoItemsAsync, updateToDoItemAsync } from '../services/todo-service';
 
 const filterItems = (rawItems) => {
@@ -16,6 +19,7 @@ const filterItems = (rawItems) => {
 
 const Index = () => {
   const [addItemValue, setAddItemValue] = useState('');
+  const [searchValue, setSearchValue] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [checkedItems, setCheckedItems] = useState(null);
@@ -31,10 +35,20 @@ const Index = () => {
       });
   }, []);
 
+  useEffect(() => {
+    getToDoItemsAsync({ search: searchValue })
+      .then((res) => {
+        const { checked, unchecked } = filterItems(res);
+
+        setCheckedItems(checked);
+        setUncheckedItems(unchecked);
+      })
+  }, [searchValue])
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    if (!loading) {
+    if (!loading && addItemValue) {
       setLoading(true);
 
       const res = await addToDoItemAsync(addItemValue);
@@ -44,6 +58,7 @@ const Index = () => {
       setUncheckedItems(unchecked);
 
       setAddItemValue('');
+      setSearchValue('');
       setLoading(false);
     }
   };
@@ -59,6 +74,7 @@ const Index = () => {
       setUncheckedItems(unchecked);
 
       setAddItemValue('');
+      setSearchValue('');
       setLoading(false);
     }
   }
@@ -66,7 +82,9 @@ const Index = () => {
   const handleItemClick = async ({ id, checked: _checked }) => {
     if (!loading) {
       setLoading(true);
-      const res = await updateToDoItemAsync(id, _checked);
+      await updateToDoItemAsync(id, _checked);
+
+      const res = await getToDoItemsAsync({ search: searchValue })
 
       const { checked, unchecked } = filterItems(res);
 
@@ -79,16 +97,20 @@ const Index = () => {
 
   return (
     <Container maxWidth={'xl'}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
+      <Grid container spacing={2} justifyContent="center" alignItems="center">
+        <Grid item xs={12} md={8}>
           <h1>title</h1>
         </Grid>
-
+        <Grid item xs={12} md={4}>
+          <DeleteTasks handleDeleteAllTasks={handleDeleteAllTasks} />
+        </Grid>
+      </Grid>
+      <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <AddItemForm handleFormSubmit={handleFormSubmit} addItemValue={addItemValue} setAddItemValue={setAddItemValue} loading={loading} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <DeleteTasks handleDeleteAllTasks={handleDeleteAllTasks} />
+          <SearchForm searchValue={searchValue} setSearchValue={setSearchValue} />
         </Grid>
 
         <Grid item xs={12} md={6}>

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Button, TextField } from '@mui/material';
+import { Button, InputAdornment, TextField } from '@mui/material';
 
 const AddItemForm = ({ handleFormSubmit, addItemValue, setAddItemValue, loading }) => (
   <form onSubmit={handleFormSubmit}>
@@ -7,8 +7,10 @@ const AddItemForm = ({ handleFormSubmit, addItemValue, setAddItemValue, loading 
       size="small"
       value={addItemValue}
       onChange={(event) => (setAddItemValue(event.target.value))}
+      InputProps={{
+        endAdornment: <InputAdornment position="end"><Button onClick={handleFormSubmit} disabled={loading}>Add</Button></InputAdornment>,
+      }}
     />
-    <Button variant="outlined" size="large" onClick={handleFormSubmit} disabled={loading}>Add</Button>
   </form>
 );
 
