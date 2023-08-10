@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { InputAdornment, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 const SearchForm = ({ searchValue, setSearchValue }) => (
