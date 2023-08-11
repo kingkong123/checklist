@@ -8,7 +8,7 @@ const getToDoItemsAsync = async (opt = {}) => {
     query = new URLSearchParams({ search }).toString();
   }
 
-  const result = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/items${opt?.search ? `?${query}` : ''}`);
+  const result = await fetch(`${baseUrl}/items${opt?.search ? `?${query}` : ''}`);
   const json = await result.json();
 
   return json.data;

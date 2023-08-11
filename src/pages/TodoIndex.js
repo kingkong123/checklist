@@ -53,9 +53,7 @@ const Index = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (count !== 0) {
-        console.log(3);
         fetchItems();
-        console.log('fetching');
       }
 
       setCount(count + 1);
